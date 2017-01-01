@@ -3,22 +3,37 @@
 import utils
 
 keypad = str.split("""
-123
-456
-789
+.....
+.123.
+.456.
+.789.
+.....
 """)
 
-assert keypad[1][1] == '5'
+keypad2 = """
+.......
+...1...
+..234..
+.56789.
+..ABC..
+...D...
+.......
+""".split()
 
-def decode(instructions, x=1, y=1):
+assert keypad[2][2] == '5'
+assert keypad2[3][1] == '5'
+
+def decode(instructions, keypad, x, y):
     for next_instructions in instructions:
         for c in next_instructions:
-            if   c == "U": y = max(0, y-1)
-            elif c == "D": y = min(y+1, len(keypad)-1)
-            elif c == "L": x = max(0, x-1)
-            elif c == "R": x = min(x+1, len(keypad[0])-1)
+            if   c == "U" and keypad[y-1][x] != '.': y -= 1
+            elif c == "D" and keypad[y+1][x] != '.': y += 1
+            elif c == "L" and keypad[y][x-1] != '.': x -= 1
+            elif c == "R" and keypad[y][x+1] != '.': x += 1
         yield keypad[y][x]
 
-assert ''.join(decode("URDRRRR DDL".split())) == "68"
+assert ''.join(decode("URDRRRR DDL".split(), keypad, 2, 2)) == "68"
 
-print(''.join(decode(utils.read_file(2).readlines())))
+print(''.join(decode(utils.read_file(2).readlines(), keypad, 2, 2)))
+
+print(''.join(decode(utils.read_file(2).readlines(), keypad2, 3, 1)))
