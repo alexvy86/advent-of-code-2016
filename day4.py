@@ -20,3 +20,23 @@ def is_valid_room(regex_groups):
 rooms = utils.read_file(4).readlines()
 processed_rooms = [re.match(r'(.+)-(\d+)\[(.+)\]', room).groups() for room in rooms]
 print(sum(int(x[1]) for x in processed_rooms if is_valid_room(x)))
+
+def shift_string(s, n):
+    """Returns string s shifted forward by n positions"""
+    n = n % len(s)
+    return s[n:] + s[:n]
+
+assert shift_string("abc", 0) == "abc"
+assert shift_string("abc", 1) == "bca"
+assert shift_string("abc", 2) == "cab"
+assert shift_string("abc", 3) == "abc"
+assert shift_string("abc", 4) == "bca"
+
+abc = "abcdefghijklmnopqrstuvwxyz"
+
+def translate_room_names(rooms):
+    for room in rooms:
+        translation = str.maketrans(abc + "-", shift_string(abc, int(room[1])) + " ")
+        yield "{0} - {1}".format(room[0].translate(translation), room[1])
+
+print([x for x in translate_room_names(processed_rooms) if "north" in x])
