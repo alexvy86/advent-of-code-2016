@@ -1,4 +1,4 @@
-"""Solution to the puzzles of day 4 of Advent of Code"""
+"""Solution to the puzzles of day 5 of Advent of Code"""
 
 import hashlib
 
